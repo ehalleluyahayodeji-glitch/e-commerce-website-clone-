@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CONTACT | E-COMMERCE</title>
+    <title>CART | E-COMMERCE</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -152,5 +152,21 @@
 
     </footer>
 </body>
+<script>
+    // toggle navbar
+const bar = document.getElementById('bar');
+const close = document.getElementById('close')
+const nav = document.getElementById('navbar');
+if (bar){
+    bar.addEventListener('click', () =>{
+        nav.classList.add('active')
+    }) 
+}
+if (close){
+    close.addEventListener('click', () =>{
+        nav.classList.remove('active')
+    })
+}
+</script>
 
 </html>
