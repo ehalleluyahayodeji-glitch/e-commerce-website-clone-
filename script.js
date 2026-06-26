@@ -30,7 +30,7 @@ eyeIcon.addEventListener("click", () => {
 
 
 // LOGIN LOCAL STORAGE
-const savedUser = JSON.parse(localStorage.getItem('loginSaved')) || []
+const savedUser = JSON.parse(localStorage.getItem('keyDetails')) || []
 const userLogin = document.getElementById('loginAccount')
 userLogin.addEventListener('click', () =>{
     const userEmail = document.getElementById('email').value
@@ -44,12 +44,7 @@ userLogin.addEventListener('click', () =>{
                 background: "linear-gradient(to right, black, red)",
 }
 }).showToast();
-    } else{
-        const userObj = {userEmail, userPassword}
-        savedUser.push(userObj)
-        console.log(savedUser);
-        localStorage.setItem('loginSaved', JSON.stringify(savedUser))
-
+    } else if (savedUser.find(user => user.email === userEmail && user.password === userPassword)){
         Toastify({
             text: "Login Successful!",
             className: "info",
@@ -61,6 +56,14 @@ userLogin.addEventListener('click', () =>{
         setTimeout(() => {
             window.location.href = 'index.html'
         }, 3000);
+    } else{
+        Toastify({
+            text: "Invalid credentials!",
+            className: "info",
+            style: {
+                background: "linear-gradient(to right, black, red)",
+}
+}).showToast();
     }
     
     
