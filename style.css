@@ -68,6 +68,24 @@ button.win {
     transition: 0.2s;
 }
 
+#navbar a button{
+    width: 100%;
+    padding: 12px;  
+    border-radius: 12px;
+    border: 1px solid #088178;
+    font-weight: 550;
+    font-size: 15px;
+    background: #088178;
+    cursor: pointer;
+    color: white;
+    transition: 1s;
+}
+
+#navbar a button:hover{
+    color: #088178;
+    background-color: #E3E6F3;
+}
+
 body {
     width: 100%;
 }
@@ -121,6 +139,7 @@ body {
     bottom: -4px;
     left: 20px;
 }
+
 
 #mobile {
     display: none;
