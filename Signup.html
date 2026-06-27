@@ -7,6 +7,7 @@
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="Signup.css ">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body>
@@ -22,7 +23,7 @@
                 <!-- <i class="fa-solid fa-link"></i> -->
             </div>
             <h1>Create Account</h1>
-            <p>Enter to get access to a world of creativity with Cara</p>
+            <p>Enter to get access to creativity with Cara</p>
             <div class="form">
                 <div class="name-row">
                     <div class="input-box">
@@ -93,11 +94,13 @@ signUp.addEventListener('click', () => {
     const password = document.getElementById('password').value
 
     if(f_name.trim() === "" && l_name.trim() === "" && email.trim() === "" && password.trim() === ""){
-        Toastify({
+                Toastify({
             text: "Please Kindly fill all input",
             className: "info",
+            duration: "3000",
             style: {
                 background: "linear-gradient(to right, black, red)",
+                maxWidth: "100%"
 }
 }).showToast();
     } else{
@@ -106,11 +109,18 @@ signUp.addEventListener('click', () => {
         console.log(userDetails)
         localStorage.setItem('keyDetails', JSON.stringify(userDetails))
 
+        createAccount.innerHTML  = `
+         <div class="d-flex align-items-center   justify-content-center  gap-2">
+  <div class="spinner-border text-success" role="status"></div>
+  <span>Creating account...</span>
+</div>`
         Toastify({
             text: "Sign Up Successful!",
             className: "info",
+            duration: "3000",
             style: {
                 background: "linear-gradient(to right, #00b09b, #96c93d)",
+                maxWidth: "100%"
             }
         }).showToast();
 
@@ -122,4 +132,6 @@ signUp.addEventListener('click', () => {
 })
 </script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
 </html>

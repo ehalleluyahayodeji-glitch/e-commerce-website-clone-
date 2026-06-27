@@ -11,8 +11,11 @@ body{
 }
 
 .container{
+    min-width: 100%;
     display:flex;
     min-height:100vh;
+    /* background: #F1F1F1; */
+    
 }
 
 /* LEFT SECTION */
@@ -241,5 +244,9 @@ button:hover{
 
     .form-section p{
         text-align:center;
+    }
+    .logo a img{
+        position: absolute;
+        right: 110px;
     }
 }
