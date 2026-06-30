@@ -45,14 +45,14 @@
                     <a href="#" class="nav-link" data-section="orders" id="nav-orders">
                         <i class="fa-solid fa-box"></i>
                         <span>My Orders</span>
-                        <span class="nav-badge" id="ordersBadge">3</span>
+                        <span class="nav-badge" id="ordersBadge" style="display:none;">0</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="nav-link" data-section="wishlist" id="nav-wishlist">
                         <i class="fa-solid fa-heart"></i>
                         <span>Wishlist</span>
-                        <span class="nav-badge wishlist-badge" id="wishlistBadge">5</span>
+                        <span class="nav-badge wishlist-badge" id="wishlistBadge" style="display:none;">0</span>
                     </a>
                 </li>
                 <li>
@@ -119,11 +119,11 @@
                 </div>
                 <a href="cart.html" class="topbar-icon" title="Cart">
                     <i class="fa-solid fa-shopping-bag"></i>
-                    <span class="icon-badge">3</span>
+                    <span class="icon-badge" id="topbarCartBadge" style="display:none;">0</span>
                 </a>
                 <button class="topbar-icon notif-btn" id="notifBtn" title="Notifications">
                     <i class="fa-solid fa-bell"></i>
-                    <span class="icon-badge pulse">2</span>
+                    <span class="icon-badge pulse" id="topbarNotifBadge" style="display:none;">0</span>
                 </button>
                 <div class="topbar-user" id="topbarUser">
                     <div class="topbar-avatar" id="topbarAvatar">JD</div>
@@ -171,15 +171,15 @@
                 <div class="stat-card" style="--accent: #088178;">
                     <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
                     <div class="stat-info">
-                        <h3 id="totalOrdersStat">12</h3>
+                        <h3 id="totalOrdersStat">0</h3>
                         <p>Total Orders</p>
                     </div>
-                    <div class="stat-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +2 this month</div>
+                    <div class="stat-trend neutral" id="ordersTrendText"><i class="fa-solid fa-minus"></i> No orders yet</div>
                 </div>
                 <div class="stat-card" style="--accent: #e63946;">
                     <div class="stat-icon"><i class="fa-solid fa-heart"></i></div>
                     <div class="stat-info">
-                        <h3 id="wishlistStat">5</h3>
+                        <h3 id="wishlistStat">0</h3>
                         <p>Wishlist Items</p>
                     </div>
                     <div class="stat-trend neutral"><i class="fa-solid fa-minus"></i> No change</div>
@@ -187,18 +187,18 @@
                 <div class="stat-card" style="--accent: #f4a261;">
                     <div class="stat-icon"><i class="fa-solid fa-truck"></i></div>
                     <div class="stat-info">
-                        <h3>2</h3>
+                        <h3 id="inTransitStat">0</h3>
                         <p>In Transit</p>
                     </div>
-                    <div class="stat-trend up"><i class="fa-solid fa-clock"></i> Expected today</div>
+                    <div class="stat-trend neutral" id="transitTrendText"><i class="fa-solid fa-minus"></i> None in transit</div>
                 </div>
                 <div class="stat-card" style="--accent: #7b2d8b;">
                     <div class="stat-icon"><i class="fa-solid fa-dollar-sign"></i></div>
                     <div class="stat-info">
-                        <h3>$1,284</h3>
+                        <h3 id="totalSpentStat">$0.00</h3>
                         <p>Total Spent</p>
                     </div>
-                    <div class="stat-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +$118 this month</div>
+                    <div class="stat-trend neutral"><i class="fa-solid fa-minus"></i> No spending yet</div>
                 </div>
             </div>
             <div class="overview-grid">
@@ -207,34 +207,8 @@
                         <h4><i class="fa-solid fa-clock-rotate-left"></i> Recent Orders</h4>
                         <a href="#" class="card-link" data-section="orders">View all</a>
                     </div>
-                    <div class="order-list">
-                        <div class="order-row">
-                            <div class="order-thumb"><img src="IMAGE/products/f1.jpg" alt="Product" onerror="this.src='https://via.placeholder.com/50x50/088178/fff?text=F'"></div>
-                            <div class="order-info">
-                                <h6>Cartoon Astronaut T-Shirt</h6>
-                                <span class="order-id">#ORD-0023</span>
-                            </div>
-                            <span class="order-status delivered">Delivered</span>
-                            <span class="order-price">$78.00</span>
-                        </div>
-                        <div class="order-row">
-                            <div class="order-thumb"><img src="IMAGE/products/f2.jpg" alt="Product" onerror="this.src='https://via.placeholder.com/50x50/088178/fff?text=F'"></div>
-                            <div class="order-info">
-                                <h6>Adidas Classic Hoodie</h6>
-                                <span class="order-id">#ORD-0022</span>
-                            </div>
-                            <span class="order-status transit">In Transit</span>
-                            <span class="order-price">$118.19</span>
-                        </div>
-                        <div class="order-row">
-                            <div class="order-thumb"><img src="IMAGE/products/n1.jpg" alt="Product" onerror="this.src='https://via.placeholder.com/50x50/088178/fff?text=F'"></div>
-                            <div class="order-info">
-                                <h6>Summer Floral Dress</h6>
-                                <span class="order-id">#ORD-0021</span>
-                            </div>
-                            <span class="order-status processing">Processing</span>
-                            <span class="order-price">$95.00</span>
-                        </div>
+                    <div class="order-list" id="recentOrdersList">
+                        <!-- Populated dynamically by dashboard.js -->
                     </div>
                 </div>
                 <div class="card" id="dashboard-active-cart-card">

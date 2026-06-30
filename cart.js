@@ -3,24 +3,42 @@
    Handles: add, remove, update, total, badge, render
    ========================================================== */
 
-// ─── Constants ────────────────────────────────────────────
-const CART_KEY = 'fashionCartItems';
+// ─── Namespacing Helpers ─────────────────────────────────
+function getLoggedInEmail() {
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    return user ? user.email : '';
+}
+
+function getCartKey() {
+    const email = getLoggedInEmail();
+    return email ? `fashionCartItems_${email}` : 'fashionCartItems';
+}
+
+function getWishlistKey() {
+    const email = getLoggedInEmail();
+    return email ? `fashionWishlist_${email}` : 'fashionWishlist';
+}
+
+function getActivityKey() {
+    const email = getLoggedInEmail();
+    return email ? `fashionActivity_${email}` : 'fashionActivity';
+}
 
 // ─── Helper: get cart from localStorage ───────────────────
 function getCart() {
-    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+    return JSON.parse(localStorage.getItem(getCartKey())) || [];
 }
 
 // ─── Helper: save cart to localStorage ────────────────────
 function saveCart(cart) {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    localStorage.setItem(getCartKey(), JSON.stringify(cart));
 }
 
 // ─── Activity Logger ──────────────────────────────────────
 function logActivity(message, icon = 'fa-check', iconClass = 'green') {
-    const activities = JSON.parse(localStorage.getItem('fashionActivity')) || [];
+    const key = getActivityKey();
+    const activities = JSON.parse(localStorage.getItem(key)) || [];
     const now = new Date();
-    // Format: "2 hours ago" or just the date string if complex. We'll store exact timestamp and format in dashboard.
     activities.unshift({
         msg: message,
         icon: icon,
@@ -28,9 +46,8 @@ function logActivity(message, icon = 'fa-check', iconClass = 'green') {
         timestamp: now.toISOString(),
         unread: true
     });
-    // Keep last 50 activities
     if (activities.length > 50) activities.pop();
-    localStorage.setItem('fashionActivity', JSON.stringify(activities));
+    localStorage.setItem(key, JSON.stringify(activities));
 }
 
 // ─── Add to Cart ──────────────────────────────────────────
@@ -102,10 +119,18 @@ function showCartToast(message, type = 'success') {
     const existing = document.querySelector('.cart-toast');
     if (existing) existing.remove();
 
+    const iconMap = {
+        success: 'fa-circle-check',
+        error:   'fa-circle-exclamation',
+        info:    'fa-circle-info',
+        warning: 'fa-triangle-exclamation'
+    };
+    const icon = iconMap[type] || 'fa-circle-check';
+
     const toast = document.createElement('div');
     toast.className = `cart-toast cart-toast--${type}`;
     toast.innerHTML = `
-        <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i>
+        <i class="fa-solid ${icon}"></i>
         <span>${message}</span>
     `;
     document.body.appendChild(toast);
@@ -253,6 +278,17 @@ function validateNewsletter(inputEl, btnEl) {
         return;
     }
 
+    // Save subscriber to localStorage
+    const subscribers = JSON.parse(localStorage.getItem('fashionSubscribers')) || [];
+    const alreadySubscribed = subscribers.find(s => s.email === email);
+    if (alreadySubscribed) {
+        showCartToast('You are already subscribed! 💌', 'info');
+        inputEl.classList.remove('input-error');
+        return;
+    }
+    subscribers.push({ email, subscribedAt: new Date().toISOString() });
+    localStorage.setItem('fashionSubscribers', JSON.stringify(subscribers));
+
     inputEl.classList.remove('input-error');
     inputEl.value = '';
     showCartToast('🎉 You\'ve subscribed successfully!', 'success');
@@ -325,6 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const parent = cartBtn.closest('a') || cartBtn;
         parent.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation(); // Prevents redirecting to sproduct page
             const name = nameEl ? nameEl.textContent.trim() : 'Product';
             const price = priceEl ? priceEl.textContent.replace('$', '').trim() : '0';
             const image = imgEl ? imgEl.src : '';
@@ -347,12 +384,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const brand = brandEl ? brandEl.textContent.trim() : '';
                 const id = `${name}-${price}`.replace(/\s+/g, '-');
 
-                const wishlist = JSON.parse(localStorage.getItem('fashionWishlist')) || [];
+                const key = getWishlistKey();
+                const wishlist = JSON.parse(localStorage.getItem(key)) || [];
                 const existing = wishlist.find(item => item.id === id);
 
                 if (!existing) {
                     wishlist.push({ id, product: name, price, img: image, brand });
-                    localStorage.setItem('fashionWishlist', JSON.stringify(wishlist));
+                    localStorage.setItem(key, JSON.stringify(wishlist));
                     showCartToast(`"${name}" added to wishlist!`);
                     logActivity(`You favorited <strong>${name}</strong>.`, 'fa-heart', 'orange');
                 } else {

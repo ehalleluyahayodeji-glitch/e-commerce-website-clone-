@@ -48,6 +48,27 @@
         <p>Save more with coupons & up to 70% off!</p>
     </section>
 
+    <!-- ── Filter and Search Bar ── -->
+    <section id="shop-filter" class="section-p1 scroll-reveal" style="padding-bottom:0;">
+        <div class="filter-bar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="shopSearchInput" placeholder="Search product or brand...">
+            </div>
+            <div class="filter-controls">
+                <select id="brandFilterSelect">
+                    <option value="all">All Brands</option>
+                    <option value="adidas">Adidas</option>
+                </select>
+                <select id="priceSortSelect">
+                    <option value="default">Sort by: Default</option>
+                    <option value="low-to-high">Price: Low to High</option>
+                    <option value="high-to-low">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
     <section id="product-1" class="section-p1">
         <div class="pro-container">
             <!-- Featured Products -->
@@ -413,7 +434,7 @@
     <script src="script.js"></script>
     <script src="cart.js"></script>
     <script>
-        // Newsletter button wiring
+        // Newsletter & Shop Filtering wiring
         document.addEventListener('DOMContentLoaded', () => {
             const newsletterInput = document.getElementById('newsletter-email');
             const newsletterBtn   = document.getElementById('newsletter-btn');
@@ -422,6 +443,76 @@
                     e.preventDefault();
                     validateNewsletter(newsletterInput, newsletterBtn);
                 });
+            }
+
+            // ── Shop Filter Bar Logic ──
+            const searchInput = document.getElementById('shopSearchInput');
+            const brandFilter = document.getElementById('brandFilterSelect');
+            const priceSort   = document.getElementById('priceSortSelect');
+            const proContainer = document.querySelector('#product-1 .pro-container');
+
+            if (proContainer && searchInput && brandFilter && priceSort) {
+                const originalProducts = Array.from(proContainer.children);
+
+                function filterAndSort() {
+                    const query = searchInput.value.toLowerCase().trim();
+                    const selectedBrand = brandFilter.value.toLowerCase();
+                    const sortType = priceSort.value;
+
+                    // 1. Filter matching elements
+                    let visibleProducts = originalProducts.filter(card => {
+                        const name = card.querySelector('h5')?.textContent.toLowerCase() || '';
+                        const brand = card.querySelector('.des span')?.textContent.toLowerCase() || '';
+                        
+                        const matchesSearch = name.includes(query) || brand.includes(query);
+                        const matchesBrand = selectedBrand === 'all' || brand.includes(selectedBrand);
+                        
+                        return matchesSearch && matchesBrand;
+                    });
+
+                    // 2. Sort visible elements
+                    if (sortType === 'low-to-high') {
+                        visibleProducts.sort((a, b) => {
+                            const priceA = parseFloat(a.querySelector('.des h4')?.textContent.replace(/[^0-9.]/g, '') || 0);
+                            const priceB = parseFloat(b.querySelector('.des h4')?.textContent.replace(/[^0-9.]/g, '') || 0);
+                            return priceA - priceB;
+                        });
+                    } else if (sortType === 'high-to-low') {
+                        visibleProducts.sort((a, b) => {
+                            const priceA = parseFloat(a.querySelector('.des h4')?.textContent.replace(/[^0-9.]/g, '') || 0);
+                            const priceB = parseFloat(b.querySelector('.des h4')?.textContent.replace(/[^0-9.]/g, '') || 0);
+                            return priceB - priceA;
+                        });
+                    }
+
+                    // 3. Render
+                    proContainer.innerHTML = '';
+                    if (visibleProducts.length === 0) {
+                        proContainer.innerHTML = `
+                            <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #888; width:100%;">
+                                <i class="fa-regular fa-face-frown" style="font-size: 40px; margin-bottom: 12px; display: block; color: #bbb;"></i>
+                                <p style="font-size: 16px; font-weight: 500;">No products match your criteria.</p>
+                                <button style="margin-top: 15px; padding: 10px 20px; background: #088178; color: #fff; border-radius: 8px; border: none; font-weight: 600; cursor:pointer;" 
+                                        id="reset-shop-filters">Reset Filters</button>
+                            </div>`;
+                        
+                        const resetBtn = document.getElementById('reset-shop-filters');
+                        if (resetBtn) {
+                            resetBtn.addEventListener('click', () => {
+                                searchInput.value = '';
+                                brandFilter.value = 'all';
+                                priceSort.value   = 'default';
+                                filterAndSort();
+                            });
+                        }
+                    } else {
+                        visibleProducts.forEach(card => proContainer.appendChild(card));
+                    }
+                }
+
+                searchInput.addEventListener('input', filterAndSort);
+                brandFilter.addEventListener('change', filterAndSort);
+                priceSort.addEventListener('change', filterAndSort);
             }
         });
     </script>

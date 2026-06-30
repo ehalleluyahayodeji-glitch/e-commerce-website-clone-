@@ -72,23 +72,26 @@
                 <h3 style="margin-top: 30px;">Payment Information</h3>
                 <div class="input-group">
                     <label for="cname">Name on Card</label>
-                    <input type="text" id="cname" placeholder="John Doe" required>
+                    <input type="text" id="cname" placeholder="John Doe" required autocomplete="cc-name">
                 </div>
-                <div class="input-group">
+                <div class="input-group" style="position:relative;">
                     <label for="ccnum">Credit Card Number</label>
-                    <input type="text" id="ccnum" placeholder="1111-2222-3333-4444" required>
+                    <input type="text" id="ccnum" placeholder="1234 5678 9012 3456" maxlength="19" required autocomplete="cc-number">
+                    <i class="fa-regular fa-credit-card" style="position:absolute;right:14px;bottom:14px;color:#aaa;pointer-events:none;"></i>
                 </div>
                 <div class="row">
                     <div class="input-group half">
                         <label for="exp">Expiry Date</label>
-                        <input type="text" id="exp" placeholder="MM/YY" required>
+                        <input type="text" id="exp" placeholder="MM/YY" maxlength="5" required autocomplete="cc-exp">
                     </div>
                     <div class="input-group half">
                         <label for="cvv">CVV</label>
-                        <input type="password" id="cvv" placeholder="123" required>
+                        <input type="password" id="cvv" placeholder="123" maxlength="4" required autocomplete="cc-csc">
                     </div>
                 </div>
-                <button type="submit" class="normal checkout-submit-btn" id="place-order-btn">Place Order</button>
+                <button type="submit" class="normal checkout-submit-btn" id="place-order-btn">
+                    <i class="fa-solid fa-lock" style="margin-right:6px;"></i>Place Order Securely
+                </button>
             </form>
 
             <div class="checkout-summary">
@@ -103,7 +106,11 @@
                 </div>
                 <div class="summary-row">
                     <span>Shipping</span>
-                    <span>Free</span>
+                    <span style="color:#088178;font-weight:600;">Free</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (5%)</span>
+                    <span id="checkout-tax">$0.00</span>
                 </div>
                 <div class="summary-row total">
                     <span>Total</span>
@@ -112,6 +119,29 @@
             </div>
         </div>
     </section>
+
+    <!-- ── Order Success Modal ───────────────────────── -->
+    <div id="order-success-modal" style="
+        display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);
+        z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+        <div style="background:#fff;border-radius:20px;padding:48px 40px;max-width:460px;width:90%;
+                    text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:successPop 0.4s ease;">
+            <div style="width:80px;height:80px;background:linear-gradient(135deg,#088178,#04b49c);
+                        border-radius:50%;display:flex;align-items:center;justify-content:center;
+                        margin:0 auto 20px;">
+                <i class="fa-solid fa-check" style="font-size:36px;color:#fff;"></i>
+            </div>
+            <h2 style="font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">Order Placed! 🎉</h2>
+            <p style="color:#666;font-size:15px;margin-bottom:8px;">Thank you for your purchase. Your order is being processed.</p>
+            <p id="success-order-id" style="font-weight:700;color:#088178;font-size:16px;margin-bottom:24px;"></p>
+            <div style="display:flex;gap:12px;justify-content:center;">
+                <a href="shop.html" style="padding:12px 24px;border:2px solid #088178;color:#088178;
+                    border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;">Continue Shopping</a>
+                <a href="dashboard.html" style="padding:12px 24px;background:linear-gradient(135deg,#088178,#04b49c);
+                    color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;">View Dashboard</a>
+            </div>
+        </div>
+    </div>
 
     <footer class="section-p1 scroll-reveal">
         <div class="col">
@@ -143,87 +173,112 @@
             const checkoutItemsEl = document.getElementById('checkout-items');
             const form = document.getElementById('checkout-form');
             const placeOrderBtn = document.getElementById('place-order-btn');
-            
+            const modal = document.getElementById('order-success-modal');
+
+            // ── Card Number Auto-Format ──────────────────────
+            const ccInput = document.getElementById('ccnum');
+            if (ccInput) {
+                ccInput.addEventListener('input', (e) => {
+                    let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+                    val = val.replace(/(.{4})/g, '$1 ').trim();
+                    e.target.value = val;
+                });
+            }
+
+            // ── Expiry Date Mask (MM/YY) ─────────────────────
+            const expInput = document.getElementById('exp');
+            if (expInput) {
+                expInput.addEventListener('input', (e) => {
+                    let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+                    if (val.length >= 3) val = val.substring(0, 2) + '/' + val.substring(2);
+                    e.target.value = val;
+                });
+            }
+
             if (checkoutItemsEl) {
-                // Populate Order Summary
-                const cart = JSON.parse(localStorage.getItem('fashionCartItems')) || [];
-                
-                if (cart.length === 0) {
-                    window.location.href = 'shop.html';
-                    return;
-                }
+                // getCart() uses the logged-in user's namespaced key (from cart.js)
+                const cart = getCart();
+                if (cart.length === 0) { window.location.href = 'shop.html'; return; }
 
                 checkoutItemsEl.innerHTML = cart.map(item => `
-                    <div class="summary-item">
-                        <img src="${item.image}" alt="${item.name}">
-                        <div class="info">
-                            <h5>${item.name}</h5>
-                            <p>Qty: ${item.qty}</p>
-                        </div>
-                        <div class="price">$${(item.price * item.qty).toFixed(2)}</div>
+                    <div class="summary-item" style="display:flex;align-items:center;gap:15px;margin-bottom:15px;">
+                        <img src="${item.image}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;" onerror="this.style.display='none'">
+                        <div class="info"><h5>${item.name}</h5><p>Qty: ${item.qty}</p></div>
+                        <div class="price" style="margin-left:auto;">$${(item.price * item.qty).toFixed(2)}</div>
                     </div>
                 `).join('');
 
-                const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-                document.getElementById('checkout-subtotal').textContent = `$${total.toFixed(2)}`;
-                document.getElementById('checkout-total').textContent = `$${total.toFixed(2)}`;
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+                const tax      = subtotal * 0.05;
+                const total    = subtotal + tax;
+                document.getElementById('checkout-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+                document.getElementById('checkout-tax').textContent      = `$${tax.toFixed(2)}`;
+                document.getElementById('checkout-total').textContent    = `$${total.toFixed(2)}`;
             }
 
-            // Handle Form Submission
             if (form) {
                 form.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    
-                    // Basic simulated validation is handled by HTML5 required attribute
-                    
-                    // Show processing state
-                    const originalText = placeOrderBtn.textContent;
-                    placeOrderBtn.textContent = 'Processing...';
+                    placeOrderBtn.innerHTML = `
+                        <span style="display:flex;align-items:center;justify-content:center;gap:8px;">
+                            <span style="width:16px;height:16px;border:3px solid rgba(255,255,255,0.3);
+                                         border-top-color:#fff;border-radius:50%;
+                                         animation:spin 0.7s linear infinite;display:inline-block;"></span>
+                            Processing...
+                        </span>`;
                     placeOrderBtn.disabled = true;
 
                     setTimeout(() => {
-                        const cart = JSON.parse(localStorage.getItem('fashionCartItems')) || [];
+                        const cart = getCart();
+
                         if (cart.length > 0) {
-                            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-                            const orderId = '#ORD-' + Math.floor(1000 + Math.random() * 9000);
-                            const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                            
-                            // Get the first item's image and name for dashboard display
-                            const firstItem = cart[0];
+                            const subtotal   = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+                            const total      = subtotal * 1.05;
+                            const orderId    = '#ORD-' + Math.floor(100000 + Math.random() * 900000);
+                            const date       = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                            const firstItem  = cart[0];
+
                             const order = {
                                 id: orderId,
                                 product: cart.length > 1 ? `${firstItem.name} + ${cart.length - 1} more` : firstItem.name,
                                 brand: firstItem.brand || 'Fashion',
-                                img: firstItem.image,
+                                img: firstItem.image || '',
                                 date: date,
                                 amount: `$${total.toFixed(2)}`,
                                 status: 'processing',
-                                items: cart // Save all items for future reference
+                                items: cart
                             };
 
-                            const orders = JSON.parse(localStorage.getItem('fashionOrders')) || [];
+                            // ── Save order under the logged-in user's namespaced key ──
+                            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                            const email        = loggedInUser ? loggedInUser.email : '';
+                            const ordersKey    = email ? `fashionOrders_${email}` : 'fashionOrders';
+
+                            const orders = JSON.parse(localStorage.getItem(ordersKey)) || [];
                             orders.unshift(order);
-                            localStorage.setItem('fashionOrders', JSON.stringify(orders));
+                            localStorage.setItem(ordersKey, JSON.stringify(orders));
 
-                            // Log activity
+                            // ── Log activity under user's namespaced key ──
                             if (typeof logActivity === 'function') {
-                                logActivity(`Successfully placed order <strong>${orderId}</strong> for ${order.amount}.`, 'fa-box', 'green');
+                                logActivity(`Placed order <strong>${orderId}</strong> for $${total.toFixed(2)}.`, 'fa-box', 'green');
                             }
-                        }
 
-                        // Clear Cart
-                        localStorage.removeItem('fashionCartItems');
-                        
-                        // Show Success
-                        showCartToast('🎉 Order Placed Successfully!', 'success');
-                        
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 2000);
-                    }, 2000);
+                            // ── Clear user's cart (saveCart from cart.js uses namespaced key) ──
+                            saveCart([]);
+
+                            // ── Show success modal ──
+                            const orderIdEl = document.getElementById('success-order-id');
+                            if (orderIdEl) orderIdEl.textContent = `Order ID: ${orderId}`;
+                            if (modal) modal.style.display = 'flex';
+                        }
+                    }, 1500);
                 });
             }
         });
     </script>
+    <style>
+        @keyframes spin       { to { transform: rotate(360deg); } }
+        @keyframes successPop { from { transform: scale(0.8); opacity:0; } to { transform: scale(1); opacity:1; } }
+    </style>
 </body>
 </html>

@@ -2,50 +2,45 @@
    FASHION E-COMMERCE | DASHBOARD JAVASCRIPT
    ================================================ */
 
-// ---- DATA ----
-let ORDERS = [
-    { id: '#ORD-0023', product: 'Cartoon Astronaut T-Shirt', brand: 'Adidas', img: 'IMAGE/products/f1.jpg', date: 'Jun 20, 2026', amount: '$78.00', status: 'delivered' },
-    { id: '#ORD-0022', product: 'Classic Hoodie', brand: 'Adidas', img: 'IMAGE/products/f2.jpg', date: 'Jun 18, 2026', amount: '$118.19', status: 'transit' },
-    { id: '#ORD-0021', product: 'Summer Floral Dress', brand: 'Cara', img: 'IMAGE/products/n1.jpg', date: 'Jun 15, 2026', amount: '$95.00', status: 'processing' },
-];
+// ---- DATA ---- (loaded from localStorage, no hardcoded data)
+let ORDERS        = [];
+let WISHLIST      = [];
+let NOTIFICATIONS = [];
 
-let WISHLIST = [];
+// ---- NAMESPACE HELPERS ----
+function getDashEmail() {
+    const u = JSON.parse(localStorage.getItem('loggedInUser'));
+    return u ? u.email : '';
+}
 
-let NOTIFICATIONS = [
-    { icon: 'fa-tag', iconClass: 'teal', msg: 'Flash Sale is live! Up to <strong>70% off</strong> on summer collection.', time: '2 days ago', unread: false },
-    { icon: 'fa-gift', iconClass: 'teal', msg: 'You\'ve earned a <strong>loyalty reward</strong> of 50 points!', time: '1 week ago', unread: false },
-];
+function getUserOrdersKey()   { const e = getDashEmail(); return e ? `fashionOrders_${e}`   : 'fashionOrders'; }
+function getUserWishlistKey() { const e = getDashEmail(); return e ? `fashionWishlist_${e}` : 'fashionWishlist'; }
+function getUserActivityKey() { const e = getDashEmail(); return e ? `fashionActivity_${e}` : 'fashionActivity'; }
 
-// Load dynamic data from localStorage
+// Load dynamic data from localStorage (user-specific only)
 function loadDynamicData() {
-    const localOrders = JSON.parse(localStorage.getItem('fashionOrders')) || [];
-    ORDERS = [...localOrders, ...ORDERS];
-
-    const localWishlist = JSON.parse(localStorage.getItem('fashionWishlist')) || [];
-    WISHLIST = localWishlist;
-
-    const localActivity = JSON.parse(localStorage.getItem('fashionActivity')) || [];
-    NOTIFICATIONS = [...localActivity, ...NOTIFICATIONS];
+    ORDERS        = JSON.parse(localStorage.getItem(getUserOrdersKey()))   || [];
+    WISHLIST      = JSON.parse(localStorage.getItem(getUserWishlistKey())) || [];
+    NOTIFICATIONS = JSON.parse(localStorage.getItem(getUserActivityKey())) || [];
 }
 
 // ---- USER DATA ----
 let userData = {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 555 0123',
-    dob: '',
-    gender: 'Prefer not to say',
+    firstName: 'User',
+    lastName:  '',
+    email:     '',
+    phone:     '',
+    dob:       '',
+    gender:    'Prefer not to say',
 };
 
-// Load from localStorage if available
+// Load from the active session (loggedInUser), not the last keyDetails entry
 function loadUserData() {
-    const stored = JSON.parse(localStorage.getItem('keyDetails') || '[]');
-    if (stored.length > 0) {
-        const user = stored[stored.length - 1];
-        userData.firstName = user.f_name || 'John';
-        userData.lastName = user.l_name || 'Doe';
-        userData.email = user.email || 'john.doe@example.com';
+    const sessionUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (sessionUser) {
+        userData.firstName = sessionUser.f_name || 'User';
+        userData.lastName  = sessionUser.l_name || '';
+        userData.email     = sessionUser.email  || '';
     }
 }
 
@@ -57,6 +52,13 @@ function getFullName() { return `${userData.firstName} ${userData.lastName}`; }
 
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
+    // ── AUTH GUARD: Redirect to Login if no session ──────
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (!loggedInUser) {
+        window.location.href = 'Login.html';
+        return;
+    }
+
     loadDynamicData();
     loadUserData();
     initUserDisplay();
@@ -75,28 +77,105 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function updateOverviewStats() {
-    document.getElementById('totalOrdersStat').textContent = ORDERS.length;
-    
-    // Total Spent
+    // ── Total Orders ──────────────────────────────────────────
+    const totalOrders = ORDERS.length;
+    document.getElementById('totalOrdersStat').textContent = totalOrders;
+    const orderTrendEl = document.getElementById('ordersTrendText');
+    if (orderTrendEl) {
+        if (totalOrders === 0) {
+            orderTrendEl.className = 'stat-trend neutral';
+            orderTrendEl.innerHTML = '<i class="fa-solid fa-minus"></i> No orders yet';
+        } else {
+            orderTrendEl.className = 'stat-trend up';
+            orderTrendEl.innerHTML = `<i class="fa-solid fa-arrow-trend-up"></i> ${totalOrders} order${totalOrders !== 1 ? 's' : ''} placed`;
+        }
+    }
+
+    // ── Total Spent ───────────────────────────────────────────
     let totalSpent = 0;
     ORDERS.forEach(o => {
         if (o.status !== 'cancelled') {
-            totalSpent += parseFloat(o.amount.replace(/[^0-9.-]+/g,""));
+            totalSpent += parseFloat((o.amount || '$0').replace(/[^0-9.-]+/g, ''));
         }
     });
-    const spentEl = document.querySelector('.stat-card[style="--accent: #7b2d8b;"] h3');
+    const spentEl = document.getElementById('totalSpentStat');
     if (spentEl) spentEl.textContent = `$${totalSpent.toFixed(2)}`;
 
-    // In Transit
+    // ── In Transit ────────────────────────────────────────────
     const inTransit = ORDERS.filter(o => o.status === 'transit').length;
-    const transitEl = document.querySelector('.stat-card[style="--accent: #f4a261;"] h3');
+    const transitEl = document.getElementById('inTransitStat');
     if (transitEl) transitEl.textContent = inTransit;
+    const transitTrendEl = document.getElementById('transitTrendText');
+    if (transitTrendEl) {
+        if (inTransit === 0) {
+            transitTrendEl.className = 'stat-trend neutral';
+            transitTrendEl.innerHTML = '<i class="fa-solid fa-minus"></i> None in transit';
+        } else {
+            transitTrendEl.className = 'stat-trend up';
+            transitTrendEl.innerHTML = `<i class="fa-solid fa-clock"></i> ${inTransit} shipment${inTransit !== 1 ? 's' : ''} on the way`;
+        }
+    }
+
+    // ── Wishlist Count ────────────────────────────────────────
+    const wishEl = document.getElementById('wishlistStat');
+    if (wishEl) wishEl.textContent = WISHLIST.length;
+
+    // ── Sidebar Orders Badge ──────────────────────────────────
+    const ordersBadge = document.getElementById('ordersBadge');
+    if (ordersBadge) {
+        ordersBadge.textContent = totalOrders;
+        ordersBadge.style.display = totalOrders > 0 ? 'inline-flex' : 'none';
+    }
+
+    // ── Recent Orders List ────────────────────────────────────
+    const recentList = document.getElementById('recentOrdersList');
+    if (recentList) {
+        if (ORDERS.length === 0) {
+            recentList.innerHTML = `
+                <div style="text-align:center;padding:32px 20px;color:var(--text-light);">
+                    <i class="fa-solid fa-box-open" style="font-size:32px;opacity:0.25;margin-bottom:10px;display:block;"></i>
+                    <p style="font-size:14px;">No orders placed yet.</p>
+                    <a href="shop.html" style="display:inline-block;margin-top:12px;padding:8px 20px;
+                       background:linear-gradient(135deg,#088178,#04b49c);color:#fff;border-radius:8px;
+                       font-size:13px;font-weight:600;text-decoration:none;">Start Shopping</a>
+                </div>`;
+        } else {
+            recentList.innerHTML = ORDERS.slice(0, 4).map(o => `
+                <div class="order-row">
+                    <div class="order-thumb">
+                        <img src="${o.img || ''}" alt="${o.product}"
+                             onerror="this.src='https://via.placeholder.com/50x50/088178/fff?text=F'">
+                    </div>
+                    <div class="order-info">
+                        <h6>${o.product}</h6>
+                        <span class="order-id">${o.id}</span>
+                    </div>
+                    <span class="order-status ${o.status}">${statusText(o.status)}</span>
+                    <span class="order-price">${o.amount}</span>
+                </div>`).join('');
+        }
+    }
+}
+
+function statusText(s) {
+    const map = { delivered: 'Delivered', transit: 'In Transit', processing: 'Processing', cancelled: 'Cancelled' };
+    return map[s] || s;
 }
 
 function initCartOverview() {
-    const cart = JSON.parse(localStorage.getItem('fashionCartItems')) || [];
+    const email = getDashEmail();
+    const cartKey = email ? `fashionCartItems_${email}` : 'fashionCartItems';
+    const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
     const container = document.getElementById('dashboardActiveCartList');
     if (!container) return;
+
+    // Update active cart badge in topbar
+    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    const topbarCartBadge = document.getElementById('topbarCartBadge');
+    if (topbarCartBadge) {
+        topbarCartBadge.textContent = totalItems;
+        topbarCartBadge.style.display = totalItems > 0 ? 'inline-flex' : 'none';
+    }
 
     if (cart.length === 0) {
         container.innerHTML = `
@@ -208,7 +287,8 @@ function initSidebar() {
     // Logout
     document.getElementById('logoutBtn').addEventListener('click', e => {
         e.preventDefault();
-        localStorage.removeItem('keyDetails');
+        // Clear both the user list session and the logged-in session
+        localStorage.removeItem('loggedInUser');
         showToast('Logged out successfully!');
         setTimeout(() => { window.location.href = 'Login.html'; }, 1500);
     });
@@ -512,8 +592,12 @@ window.addToCart = function(index) {
 
 function updateWishlistBadge() {
     const badge = document.getElementById('wishlistBadge');
-    badge.textContent = WISHLIST.length;
-    document.getElementById('wishlistStat').textContent = WISHLIST.length;
+    if (badge) {
+        badge.textContent = WISHLIST.length;
+        badge.style.display = WISHLIST.length > 0 ? 'inline-flex' : 'none';
+    }
+    const wishStat = document.getElementById('wishlistStat');
+    if (wishStat) wishStat.textContent = WISHLIST.length;
 }
 
 // ---- NOTIFICATIONS ----
@@ -566,15 +650,21 @@ function initNotifications() {
     // Update badge
     const unreadCount = NOTIFICATIONS.filter(n => n.unread).length;
     const badge = document.getElementById('notifBadge');
+    const topbarNotifBadge = document.getElementById('topbarNotifBadge');
     const pulseBadges = document.querySelectorAll('.icon-badge.pulse');
     
     if (unreadCount === 0) {
         if (badge) badge.style.display = 'none';
+        if (topbarNotifBadge) topbarNotifBadge.style.display = 'none';
         pulseBadges.forEach(b => b.style.display = 'none');
     } else {
         if (badge) {
             badge.style.display = 'inline-flex';
             badge.textContent = unreadCount;
+        }
+        if (topbarNotifBadge) {
+            topbarNotifBadge.style.display = 'inline-flex';
+            topbarNotifBadge.textContent = unreadCount;
         }
         pulseBadges.forEach(b => {
             b.style.display = 'inline-flex';
