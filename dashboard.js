@@ -3,31 +3,30 @@
    ================================================ */
 
 // ---- DATA ----
-const ORDERS = [
+let ORDERS = [
     { id: '#ORD-0023', product: 'Cartoon Astronaut T-Shirt', brand: 'Adidas', img: 'IMAGE/products/f1.jpg', date: 'Jun 20, 2026', amount: '$78.00', status: 'delivered' },
     { id: '#ORD-0022', product: 'Classic Hoodie', brand: 'Adidas', img: 'IMAGE/products/f2.jpg', date: 'Jun 18, 2026', amount: '$118.19', status: 'transit' },
     { id: '#ORD-0021', product: 'Summer Floral Dress', brand: 'Cara', img: 'IMAGE/products/n1.jpg', date: 'Jun 15, 2026', amount: '$95.00', status: 'processing' },
-    { id: '#ORD-0020', product: 'Streetwear Jacket', brand: 'Nike', img: 'IMAGE/products/n2.jpg', date: 'Jun 10, 2026', amount: '$210.00', status: 'delivered' },
-    { id: '#ORD-0019', product: 'Casual Linen Shirt', brand: 'H&M', img: 'IMAGE/products/f3.jpg', date: 'May 28, 2026', amount: '$45.00', status: 'delivered' },
-    { id: '#ORD-0018', product: 'Denim Joggers', brand: 'Levi\'s', img: 'IMAGE/products/f4.jpg', date: 'May 20, 2026', amount: '$89.00', status: 'cancelled' },
-    { id: '#ORD-0017', product: 'Boho Maxi Skirt', brand: 'Cara', img: 'IMAGE/products/n3.jpg', date: 'May 10, 2026', amount: '$62.00', status: 'delivered' },
 ];
 
-const WISHLIST = [
-    { id: 1, product: 'Vintage Denim Jacket', brand: 'Levi\'s', img: 'IMAGE/products/f5.jpg', price: '$145.00' },
-    { id: 2, product: 'Knit Cardigan', brand: 'Zara', img: 'IMAGE/products/f6.jpg', price: '$88.00' },
-    { id: 3, product: 'Printed Summer Blouse', brand: 'Cara', img: 'IMAGE/products/n4.jpg', price: '$55.00' },
-    { id: 4, product: 'Slim Chino Pants', brand: 'H&M', img: 'IMAGE/products/n5.jpg', price: '$70.00' },
-    { id: 5, product: 'Silk Evening Top', brand: 'Cara', img: 'IMAGE/products/n6.jpg', price: '$92.00' },
-];
+let WISHLIST = [];
 
-const NOTIFICATIONS = [
-    { icon: 'fa-check', iconClass: 'green', msg: 'Your order <strong>#ORD-0023</strong> has been delivered successfully!', time: '2 hours ago', unread: true },
-    { icon: 'fa-truck', iconClass: 'orange', msg: 'Order <strong>#ORD-0022</strong> is out for delivery. Expected today.', time: 'Yesterday', unread: true },
+let NOTIFICATIONS = [
     { icon: 'fa-tag', iconClass: 'teal', msg: 'Flash Sale is live! Up to <strong>70% off</strong> on summer collection.', time: '2 days ago', unread: false },
-    { icon: 'fa-heart', iconClass: 'green', msg: 'Item from your wishlist is back in stock!', time: '3 days ago', unread: false },
     { icon: 'fa-gift', iconClass: 'teal', msg: 'You\'ve earned a <strong>loyalty reward</strong> of 50 points!', time: '1 week ago', unread: false },
 ];
+
+// Load dynamic data from localStorage
+function loadDynamicData() {
+    const localOrders = JSON.parse(localStorage.getItem('fashionOrders')) || [];
+    ORDERS = [...localOrders, ...ORDERS];
+
+    const localWishlist = JSON.parse(localStorage.getItem('fashionWishlist')) || [];
+    WISHLIST = localWishlist;
+
+    const localActivity = JSON.parse(localStorage.getItem('fashionActivity')) || [];
+    NOTIFICATIONS = [...localActivity, ...NOTIFICATIONS];
+}
 
 // ---- USER DATA ----
 let userData = {
@@ -58,6 +57,7 @@ function getFullName() { return `${userData.firstName} ${userData.lastName}`; }
 
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
+    loadDynamicData();
     loadUserData();
     initUserDisplay();
     initNavigation();
@@ -70,7 +70,54 @@ document.addEventListener('DOMContentLoaded', () => {
     initSettings();
     initModals();
     initGlobalSearch();
+    initCartOverview();
+    updateOverviewStats();
 });
+
+function updateOverviewStats() {
+    document.getElementById('totalOrdersStat').textContent = ORDERS.length;
+    
+    // Total Spent
+    let totalSpent = 0;
+    ORDERS.forEach(o => {
+        if (o.status !== 'cancelled') {
+            totalSpent += parseFloat(o.amount.replace(/[^0-9.-]+/g,""));
+        }
+    });
+    const spentEl = document.querySelector('.stat-card[style="--accent: #7b2d8b;"] h3');
+    if (spentEl) spentEl.textContent = `$${totalSpent.toFixed(2)}`;
+
+    // In Transit
+    const inTransit = ORDERS.filter(o => o.status === 'transit').length;
+    const transitEl = document.querySelector('.stat-card[style="--accent: #f4a261;"] h3');
+    if (transitEl) transitEl.textContent = inTransit;
+}
+
+function initCartOverview() {
+    const cart = JSON.parse(localStorage.getItem('fashionCartItems')) || [];
+    const container = document.getElementById('dashboardActiveCartList');
+    if (!container) return;
+
+    if (cart.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center;padding:20px;color:var(--text-light);">
+                <i class="fa-solid fa-shopping-bag" style="font-size:32px;opacity:0.3;margin-bottom:10px;"></i>
+                <br>Your cart is empty.
+            </div>`;
+        return;
+    }
+
+    container.innerHTML = cart.map(item => `
+        <div class="order-row">
+            <div class="order-thumb"><img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/50x50/088178/fff?text=F'"></div>
+            <div class="order-info">
+                <h6>${item.name}</h6>
+                <span class="order-id">Qty: ${item.qty}</span>
+            </div>
+            <span class="order-price" style="margin-left:auto;">$${(item.price * item.qty).toFixed(2)}</span>
+        </div>
+    `).join('');
+}
 
 // ---- USER DISPLAY ----
 function initUserDisplay() {
@@ -190,9 +237,23 @@ function initTopbar() {
     });
 
     markAllRead.addEventListener('click', () => {
+        // Update DOM
         document.querySelectorAll('.notif-item.unread').forEach(item => item.classList.remove('unread'));
-        document.querySelectorAll('.icon-badge.pulse').forEach(b => b.textContent = '0');
-        document.getElementById('notifBadge').style.display = 'none';
+        document.querySelectorAll('.icon-badge.pulse').forEach(b => {
+            b.textContent = '0';
+            b.style.display = 'none';
+        });
+        const notifBadge = document.getElementById('notifBadge');
+        if (notifBadge) notifBadge.style.display = 'none';
+        
+        // Update localStorage
+        const activities = JSON.parse(localStorage.getItem('fashionActivity')) || [];
+        activities.forEach(a => a.unread = false);
+        localStorage.setItem('fashionActivity', JSON.stringify(activities));
+        
+        // Update NOTIFICATIONS array in memory
+        NOTIFICATIONS.forEach(n => n.unread = false);
+
         showToast('All notifications marked as read.');
     });
 
@@ -233,6 +294,28 @@ function initOrders() {
 
 function renderOrders(orders) {
     const tbody = document.getElementById('ordersTableBody');
+    const recentContainer = document.querySelector('.overview-grid .card .order-list');
+
+    // Update Overview Recent Orders (first 3)
+    if (recentContainer && orders === ORDERS) {
+        if (ORDERS.length === 0) {
+            recentContainer.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-light);">No recent orders.</div>`;
+        } else {
+            recentContainer.innerHTML = ORDERS.slice(0, 3).map(o => `
+                <div class="order-row">
+                    <div class="order-thumb"><img src="${o.img}" alt="${o.product}" onerror="this.src='https://via.placeholder.com/50x50/088178/fff?text=F'"></div>
+                    <div class="order-info">
+                        <h6>${o.product}</h6>
+                        <span class="order-id">${o.id}</span>
+                    </div>
+                    <span class="order-status ${o.status}">${statusLabel(o.status)}</span>
+                    <span class="order-price">${o.amount}</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    if (!tbody) return;
     if (orders.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-light);">
             <i class="fa-solid fa-box-open" style="font-size:40px;margin-bottom:12px;display:block;opacity:0.3;"></i>
@@ -366,14 +449,65 @@ function renderWishlist(items) {
 }
 
 window.removeWishlistItem = function(index) {
-    WISHLIST.splice(index, 1);
+    const removed = WISHLIST.splice(index, 1)[0];
+    localStorage.setItem('fashionWishlist', JSON.stringify(WISHLIST));
     renderWishlist(WISHLIST);
     updateWishlistBadge();
     showToast('Item removed from wishlist.');
+    
+    // Log Activity
+    const activities = JSON.parse(localStorage.getItem('fashionActivity')) || [];
+    activities.unshift({
+        msg: `Removed <strong>${removed.product}</strong> from wishlist.`,
+        icon: 'fa-times',
+        iconClass: 'orange',
+        timestamp: new Date().toISOString(),
+        unread: true
+    });
+    if (activities.length > 50) activities.pop();
+    localStorage.setItem('fashionActivity', JSON.stringify(activities));
+    
+    // Re-init notifications so it shows up
+    NOTIFICATIONS = [...JSON.parse(localStorage.getItem('fashionActivity') || '[]'), ...NOTIFICATIONS.filter(n => !n.timestamp)];
+    initNotifications();
 };
 
 window.addToCart = function(index) {
-    showToast(`"${WISHLIST[index].product}" added to cart!`);
+    const item = WISHLIST[index];
+    
+    // Add to actual cart in localStorage
+    const cart = JSON.parse(localStorage.getItem('fashionCartItems')) || [];
+    const cartId = item.id.toString();
+    const existing = cart.find(c => c.id === cartId);
+    
+    const priceNum = parseFloat(item.price.replace('$', ''));
+    if (existing) {
+        existing.qty += 1;
+    } else {
+        cart.push({ id: cartId, name: item.product, price: priceNum, image: item.img, brand: item.brand, qty: 1 });
+    }
+    localStorage.setItem('fashionCartItems', JSON.stringify(cart));
+    
+    // Log Activity
+    const activities = JSON.parse(localStorage.getItem('fashionActivity')) || [];
+    activities.unshift({
+        msg: `You added <strong>${item.product}</strong> to your cart from wishlist.`,
+        icon: 'fa-cart-arrow-down',
+        iconClass: 'teal',
+        timestamp: new Date().toISOString(),
+        unread: true
+    });
+    if (activities.length > 50) activities.pop();
+    localStorage.setItem('fashionActivity', JSON.stringify(activities));
+    
+    NOTIFICATIONS = [...JSON.parse(localStorage.getItem('fashionActivity') || '[]'), ...NOTIFICATIONS.filter(n => !n.timestamp)];
+    initNotifications();
+    initCartOverview(); // Refresh the active cart view
+
+    showToast(`"${item.product}" added to cart!`);
+    
+    // Optional: Remove from wishlist after adding to cart
+    // removeWishlistItem(index);
 };
 
 function updateWishlistBadge() {
@@ -383,25 +517,69 @@ function updateWishlistBadge() {
 }
 
 // ---- NOTIFICATIONS ----
+function timeAgo(dateString) {
+    if (!dateString) return '';
+    if (!dateString.includes('T')) return dateString; // Already formatted (mock data)
+    
+    const date = new Date(dateString);
+    const seconds = Math.floor((new Date() - date) / 1000);
+    
+    if (seconds < 60) return 'Just now';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    const days = Math.floor(hours / 24);
+    return `${days} day${days !== 1 ? 's' : ''} ago`;
+}
+
 function initNotifications() {
     const list = document.getElementById('notifFullList');
-    list.innerHTML = NOTIFICATIONS.map(n => `
+    const dropdownList = document.querySelector('#notifDropdown .notif-list');
+
+    const html = NOTIFICATIONS.map(n => `
         <div class="notif-item ${n.unread ? 'unread' : ''}">
             <div class="notif-icon ${n.iconClass}"><i class="fa-solid ${n.icon}"></i></div>
             <div style="flex:1;">
                 <p>${n.msg}</p>
-                <span>${n.time}</span>
+                <span>${timeAgo(n.timestamp || n.time)}</span>
             </div>
             ${n.unread ? `<span style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:6px;"></span>` : ''}
         </div>
     `).join('');
 
+    if (list) list.innerHTML = html;
+    
+    // Update the dropdown list too
+    if (dropdownList) {
+        dropdownList.innerHTML = NOTIFICATIONS.slice(0, 4).map(n => `
+            <div class="notif-item ${n.unread ? 'unread' : ''}">
+                <div class="notif-icon ${n.iconClass}"><i class="fa-solid ${n.icon}"></i></div>
+                <div>
+                    <p>${n.msg}</p>
+                    <span>${timeAgo(n.timestamp || n.time)}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
     // Update badge
     const unreadCount = NOTIFICATIONS.filter(n => n.unread).length;
+    const badge = document.getElementById('notifBadge');
+    const pulseBadges = document.querySelectorAll('.icon-badge.pulse');
+    
     if (unreadCount === 0) {
-        document.getElementById('notifBadge').style.display = 'none';
+        if (badge) badge.style.display = 'none';
+        pulseBadges.forEach(b => b.style.display = 'none');
     } else {
-        document.getElementById('notifBadge').textContent = unreadCount;
+        if (badge) {
+            badge.style.display = 'inline-flex';
+            badge.textContent = unreadCount;
+        }
+        pulseBadges.forEach(b => {
+            b.style.display = 'inline-flex';
+            b.textContent = unreadCount;
+        });
     }
 }
 

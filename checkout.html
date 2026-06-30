@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fashion E-Commerce — Secure Checkout.">
+    <title>CHECKOUT | FASHION E-COMMERCE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <section id="header">
+        <a href="index.html"><img src="IMAGE/logo.png" class="logo" alt="Fashion Store Logo"></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="lg-bag">
+                    <a class="active cart-icon-wrapper" href="cart.html" aria-label="Shopping cart">
+                        <i class="fa-solid fa-shopping-bag"></i>
+                        <span class="cart-badge" aria-live="polite">0</span>
+                    </a>
+                </li>
+                <a href="#" id="close" aria-label="Close menu"><i class="fa-solid fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html" class="cart-icon-wrapper" aria-label="Shopping cart">
+                <i class="fa-solid fa-shopping-bag"></i>
+                <span class="cart-badge" aria-live="polite">0</span>
+            </a>
+            <i id="bar" class="fa-solid fa-outdent" aria-label="Open menu"></i>
+        </div>
+    </section>
+
+    <section id="page-header" class="about-header scroll-reveal">
+        <h2>#secure_checkout</h2>
+        <p>Complete your purchase quickly and securely.</p>
+    </section>
+
+    <section id="checkout" class="section-p1 scroll-reveal">
+        <div class="checkout-container">
+            <form id="checkout-form" class="checkout-form">
+                <h3>Billing & Shipping Details</h3>
+                <div class="input-group">
+                    <label for="fname">Full Name</label>
+                    <input type="text" id="fname" placeholder="John Doe" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="address">Shipping Address</label>
+                    <input type="text" id="address" placeholder="123 Main St, Apartment 4B" required>
+                </div>
+                <div class="row">
+                    <div class="input-group half">
+                        <label for="city">City</label>
+                        <input type="text" id="city" placeholder="New York" required>
+                    </div>
+                    <div class="input-group half">
+                        <label for="zip">Zip Code</label>
+                        <input type="text" id="zip" placeholder="10001" required>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px;">Payment Information</h3>
+                <div class="input-group">
+                    <label for="cname">Name on Card</label>
+                    <input type="text" id="cname" placeholder="John Doe" required>
+                </div>
+                <div class="input-group">
+                    <label for="ccnum">Credit Card Number</label>
+                    <input type="text" id="ccnum" placeholder="1111-2222-3333-4444" required>
+                </div>
+                <div class="row">
+                    <div class="input-group half">
+                        <label for="exp">Expiry Date</label>
+                        <input type="text" id="exp" placeholder="MM/YY" required>
+                    </div>
+                    <div class="input-group half">
+                        <label for="cvv">CVV</label>
+                        <input type="password" id="cvv" placeholder="123" required>
+                    </div>
+                </div>
+                <button type="submit" class="normal checkout-submit-btn" id="place-order-btn">Place Order</button>
+            </form>
+
+            <div class="checkout-summary">
+                <h3>Order Summary</h3>
+                <div id="checkout-items">
+                    <!-- Loaded dynamically -->
+                </div>
+                <hr>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="checkout-subtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="checkout-total">$0.00</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="section-p1 scroll-reveal">
+        <div class="col">
+            <img class="logo" src="IMAGE/logo.png" alt="Fashion Store Logo">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> 562 Wellington Road, Street 32, San Francisco</p>
+            <p><strong>Phone:</strong> +01 2222 365 / (+91) 01 2345 6789</p>
+            <p><strong>Hours:</strong> 10:00 - 18:00, Mon - Sat</p>
+        </div>
+        <div class="col">
+            <h4>About</h4>
+            <a href="about.html">About us</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="cart.html">View Cart</a>
+            <a href="#">Help</a>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2026, DammyGold — Fashion E-Commerce</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkoutItemsEl = document.getElementById('checkout-items');
+            const form = document.getElementById('checkout-form');
+            const placeOrderBtn = document.getElementById('place-order-btn');
+            
+            if (checkoutItemsEl) {
+                // Populate Order Summary
+                const cart = JSON.parse(localStorage.getItem('fashionCartItems')) || [];
+                
+                if (cart.length === 0) {
+                    window.location.href = 'shop.html';
+                    return;
+                }
+
+                checkoutItemsEl.innerHTML = cart.map(item => `
+                    <div class="summary-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="info">
+                            <h5>${item.name}</h5>
+                            <p>Qty: ${item.qty}</p>
+                        </div>
+                        <div class="price">$${(item.price * item.qty).toFixed(2)}</div>
+                    </div>
+                `).join('');
+
+                const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+                document.getElementById('checkout-subtotal').textContent = `$${total.toFixed(2)}`;
+                document.getElementById('checkout-total').textContent = `$${total.toFixed(2)}`;
+            }
+
+            // Handle Form Submission
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    // Basic simulated validation is handled by HTML5 required attribute
+                    
+                    // Show processing state
+                    const originalText = placeOrderBtn.textContent;
+                    placeOrderBtn.textContent = 'Processing...';
+                    placeOrderBtn.disabled = true;
+
+                    setTimeout(() => {
+                        const cart = JSON.parse(localStorage.getItem('fashionCartItems')) || [];
+                        if (cart.length > 0) {
+                            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+                            const orderId = '#ORD-' + Math.floor(1000 + Math.random() * 9000);
+                            const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                            
+                            // Get the first item's image and name for dashboard display
+                            const firstItem = cart[0];
+                            const order = {
+                                id: orderId,
+                                product: cart.length > 1 ? `${firstItem.name} + ${cart.length - 1} more` : firstItem.name,
+                                brand: firstItem.brand || 'Fashion',
+                                img: firstItem.image,
+                                date: date,
+                                amount: `$${total.toFixed(2)}`,
+                                status: 'processing',
+                                items: cart // Save all items for future reference
+                            };
+
+                            const orders = JSON.parse(localStorage.getItem('fashionOrders')) || [];
+                            orders.unshift(order);
+                            localStorage.setItem('fashionOrders', JSON.stringify(orders));
+
+                            // Log activity
+                            if (typeof logActivity === 'function') {
+                                logActivity(`Successfully placed order <strong>${orderId}</strong> for ${order.amount}.`, 'fa-box', 'green');
+                            }
+                        }
+
+                        // Clear Cart
+                        localStorage.removeItem('fashionCartItems');
+                        
+                        // Show Success
+                        showCartToast('🎉 Order Placed Successfully!', 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 2000);
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

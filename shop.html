@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHOP | E-COMMERCE</title>
+    <meta name="description" content="Fashion E-Commerce — Shop the latest trends in clothing and accessories.">
+    <title>SHOP | FASHION E-COMMERCE</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+    <!-- Back to Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fa-solid fa-chevron-up"></i>
+    </button>
+
     <section id="header">
-        <a href="#"><img src="IMAGE/logo.png" class="logo" alt=""></a>
+        <a href="index.html"><img src="IMAGE/logo.png" class="logo" alt="Fashion Store Logo"></a>
         <div>
             <ul id="navbar">
                 <li><a href="index.html">Home</a></li>
@@ -17,310 +24,373 @@
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
-                <li id="lg-bag"><a href="cart.html"><i class="fa-solid fa-shopping-bag"></i></a></li>
-                <a href="#" id="close"><i class="fa-solid fa-times "></i></a>
+                <li id="lg-bag">
+                    <a href="cart.html" class="cart-icon-wrapper" aria-label="Shopping cart">
+                        <i class="fa-solid fa-shopping-bag"></i>
+                        <span class="cart-badge" aria-live="polite">0</span>
+                    </a>
+                </li>
+                <a href="Signup.html"><button>Let's Get Started</button></a>
+                <a href="#" id="close" aria-label="Close menu"><i class="fa-solid fa-times"></i></a>
             </ul>
         </div>
         <div id="mobile">
-            <a href="cart.html"><i class="fa-solid fa-shopping-bag"></i></a>
-            <i id="bar" class="fa-solid fa-outdent"></i>
+            <a href="cart.html" class="cart-icon-wrapper" aria-label="Shopping cart">
+                <i class="fa-solid fa-shopping-bag"></i>
+                <span class="cart-badge" aria-live="polite">0</span>
+            </a>
+            <i id="bar" class="fa-solid fa-outdent" aria-label="Open menu"></i>
         </div>
     </section>
-    <section id="page-header">
+
+    <section id="page-header" class="scroll-reveal">
         <h2>#stayhome</h2> 
         <p>Save more with coupons & up to 70% off!</p>
     </section>
+
     <section id="product-1" class="section-p1">
         <div class="pro-container">
-            <div class="pro" onclick="window.location.href='sproduct.html';">
-                <img src="IMAGE/products/f1.jpg" alt="">
+            <!-- Featured Products -->
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=f1'">
+                <img src="IMAGE/products/f1.jpg" alt="Cartoon Astronaut T-Shirt">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=f1" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+                </div>
                 <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
+                    <span>adidas</span>
+                    <h5>Cartoon Astronaut T-Shirts</h5>
                     <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
                     </div>
                     <h4>$78</h4>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/f2.jpg" alt="">
-                <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
-                    <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <h4>$78</h4>
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=f2'">
+                <img src="IMAGE/products/f2.jpg" alt="Sports Performance T-Shirt">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=f2" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <div class="des">
+                    <span>adidas</span>
+                    <h5>Sports Performance T-Shirt</h5>
+                    <div class="star">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <h4>$65</h4>
+                </div>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/f3.jpg" alt="">
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=f3'">
+                <img src="IMAGE/products/f3.jpg" alt="Classic Polo T-Shirt">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=f3" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+                </div>
                 <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
+                    <span>adidas</span>
+                    <h5>Classic Polo T-Shirt</h5>
                     <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                     </div>
-                    <h4>$78</h4>
+                    <h4>$89</h4>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/f4.jpg" alt="">
-                <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
-                    <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <h4>$78</h4>
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=f4'">
+                <img src="IMAGE/products/f4.jpg" alt="Urban Style T-Shirt">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=f4" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <div class="des">
+                    <span>adidas</span>
+                    <h5>Urban Style T-Shirt</h5>
+                    <div class="star">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <h4>$72</h4>
+                </div>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/f5.jpg" alt="">
-                <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
-                    <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <h4>$78</h4>
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=f5'">
+                <img src="IMAGE/products/f5.jpg" alt="Graphic Print T-Shirt">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=f5" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <div class="des">
+                    <span>adidas</span>
+                    <h5>Graphic Print T-Shirt</h5>
+                    <div class="star">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <h4>$55</h4>
+                </div>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/f6.jpg" alt="">
-                <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
-                    <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <h4>$78</h4>
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=f6'">
+                <img src="IMAGE/products/f6.jpg" alt="Summer Breeze T-Shirt">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=f6" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <div class="des">
+                    <span>adidas</span>
+                    <h5>Summer Breeze T-Shirt</h5>
+                    <div class="star">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <h4>$68</h4>
+                </div>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/f7.jpg" alt="">
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=f7'">
+                <img src="IMAGE/products/f7.jpg" alt="Vintage Wash T-Shirt">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=f7" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+                </div>
                 <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
+                    <span>adidas</span>
+                    <h5>Vintage Wash T-Shirt</h5>
                     <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                     </div>
-                    <h4>$78</h4>
+                    <h4>$92</h4>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/f8.jpg" alt="">
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=f8'">
+                <img src="IMAGE/products/f8.jpg" alt="Active Wear T-Shirt">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=f8" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+                </div>
                 <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
+                    <span>adidas</span>
+                    <h5>Active Wear T-Shirt</h5>
                     <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
                     </div>
                     <h4>$78</h4>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/n1.jpg" alt="">
+
+            <!-- New Arrivals -->
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=n1'">
+                <img src="IMAGE/products/n1.jpg" alt="Fresh Drop Tee">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=n1" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+                </div>
                 <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
+                    <span>adidas</span>
+                    <h5>Fresh Drop Tee — Midnight</h5>
                     <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                     </div>
-                    <h4>$78</h4>
+                    <h4>$82</h4>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/n2.jpg" alt="">
-                <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
-                    <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <h4>$78</h4>
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=n2'">
+                <img src="IMAGE/products/n2.jpg" alt="Cali Surf Cotton Tee">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=n2" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <div class="des">
+                    <span>adidas</span>
+                    <h5>Cali Surf Cotton Tee</h5>
+                    <div class="star">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <h4>$74</h4>
+                </div>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/n3.jpg" alt="">
-                <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
-                    <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <h4>$78</h4>
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=n3'">
+                <img src="IMAGE/products/n3.jpg" alt="Tokyo Street Style Tee">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=n3" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <div class="des">
+                    <span>adidas</span>
+                    <h5>Tokyo Street Style Tee</h5>
+                    <div class="star">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <h4>$79</h4>
+                </div>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/n4.jpg" alt="">
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=n4'">
+                <img src="IMAGE/products/n4.jpg" alt="Urban Explorer Hoodie-Tee">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=n4" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+                </div>
                 <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
+                    <span>adidas</span>
+                    <h5>Urban Explorer Hoodie-Tee</h5>
                     <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                     </div>
-                    <h4>$78</h4>
+                    <h4>$95</h4>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/n5.jpg" alt="">
-                <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
-                    <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <h4>$78</h4>
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=n5'">
+                <img src="IMAGE/products/n5.jpg" alt="Essential Comfort Tee">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=n5" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <div class="des">
+                    <span>adidas</span>
+                    <h5>Essential Comfort Tee</h5>
+                    <div class="star">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <h4>$61</h4>
+                </div>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/n6.jpg" alt="">
-                <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
-                    <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <h4>$78</h4>
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=n6'">
+                <img src="IMAGE/products/n6.jpg" alt="Bold Logo Statement Tee">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=n6" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <div class="des">
+                    <span>adidas</span>
+                    <h5>Bold Logo Statement Tee</h5>
+                    <div class="star">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <h4>$70</h4>
+                </div>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/n7.jpg" alt="">
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=n7'">
+                <img src="IMAGE/products/n7.jpg" alt="Minimalist Black Tee">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=n7" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+                </div>
                 <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
+                    <span>adidas</span>
+                    <h5>Minimalist Black Tee</h5>
                     <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                     </div>
-                    <h4>$78</h4>
+                    <h4>$85</h4>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
-            <div class="pro">
-                <img src="IMAGE/products/n8.jpg" alt="">
-                <div class="des">
-                    <span>adidas </span>
-                    <h5>Carton Astronaut T-Shirts</h5>
-                    <div class="star">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <h4>$78</h4>
+            <div class="pro scroll-reveal" onclick="window.location.href='sproduct.html?id=n8'">
+                <img src="IMAGE/products/n8.jpg" alt="Retro Wave Print Tee">
+                <div class="pro-overlay">
+                    <a href="sproduct.html?id=n8" class="pro-overlay-btn" title="Quick View" onclick="event.stopPropagation()"><i class="fa-regular fa-eye"></i></a>
+                    <button class="pro-overlay-btn" title="Wishlist" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
                 </div>
-                <a href=""><i class="fa fa-shopping-cart"></i></a>
+                <div class="des">
+                    <span>adidas</span>
+                    <h5>Retro Wave Print Tee</h5>
+                    <div class="star">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <h4>$77</h4>
+                </div>
+                <a href="#" onclick="event.stopPropagation()"><i class="fa fa-shopping-cart"></i></a>
             </div>
         </div>
-
     </section>
-    <section id="pagination" class="section-p1">
+
+    <section id="pagination" class="section-p1 scroll-reveal">
         <a href="#">1</a>
         <a href="#">2</a>
         <a href="#"><i class="fa-solid fa-long-arrow-alt-right"></i> </a>
     </section>
-    <section id="newsletter" class="section-p1" class="section-m1">
+
+    <section id="newsletter" class="section-p1 section-m1 scroll-reveal">
         <div class="newstext">
             <h4>Sign Up For Newsletters</h4>
             <p>Get E-mail updates about our latest shop and <span>special offers.</span></p>
         </div>
         <div class="form">
-            <input type="text" placeholder="Your email address">
-            <button class="normal">Sign Up</button>
+            <input type="email" id="newsletter-email" placeholder="Your email address" aria-label="Email for newsletter">
+            <button class="normal" id="newsletter-btn">Sign Up</button>
         </div>
-
     </section>
+
     <footer class="section-p1">
         <div class="col">
-            <img class="logo" src="IMAGE/logo.png" alt="">
+            <img class="logo" src="IMAGE/logo.png" alt="Fashion Store Logo">
             <h4>Contact</h4>
-            <p><strong>Address:</strong> 562 wellington Road, Street 32, San Francisco</p>
+            <p><strong>Address:</strong> 562 Wellington Road, Street 32, San Francisco</p>
             <p><strong>Phone:</strong> +01 2222 365 / (+91) 01 2345 6789</p>
             <p><strong>Hours:</strong> 10:00 - 18:00, Mon - Sat</p> 
             <div class="follo">
                 <h4>Follow us</h4>
                 <div class="icon">
-                    <i class="fab fa-facebook-f"></i>
-                    <i class="fab fa-twitter"></i> 
-                    <i class="fab fa-instagram"></i>
-                    <i class="fab fa-pinterest-p"></i>
-                    <i class="fab fa-youtube"></i>
+                    <i class="fab fa-facebook-f" title="Facebook"></i>
+                    <i class="fab fa-twitter" title="Twitter"></i> 
+                    <i class="fab fa-instagram" title="Instagram"></i>
+                    <i class="fab fa-pinterest-p" title="Pinterest"></i>
+                    <i class="fab fa-youtube" title="YouTube"></i>
                 </div>
             </div>
         </div>
         <div class="col">
             <h4>About</h4>
-            <a href="#">About us</a>
+            <a href="about.html">About us</a>
             <a href="#">Delivery Information</a>
             <a href="#">Privacy Policy</a>
-            <a href="#">Terms & Conditions</a>
-            <a href="#">Contact Us</a>
+            <a href="#">Terms &amp; Conditions</a>
+            <a href="contact.html">Contact Us</a>
         </div>
         <div class="col">
             <h4>My Account</h4>
-            <a href="#">Sign In</a>
-            <a href="#">View Cart</a>
+            <a href="Login.html">Sign In</a>
+            <a href="cart.html">View Cart</a>
             <a href="#">My Wishlist</a>
             <a href="#">Track My Order</a>
             <a href="#">Help</a>
@@ -329,32 +399,31 @@
             <h4>Install App</h4>
             <p>From App Store or Google Play</p>
             <div class="row">
-                <img src="IMAGE/pay/app.jpg" alt="">
-                <img src="IMAGE/pay/play.jpg" alt="">
+                <img src="IMAGE/pay/app.jpg" alt="Download on App Store">
+                <img src="IMAGE/pay/play.jpg" alt="Get it on Google Play">
             </div>
             <p>Secured Payment Gateways</p>
-            <img src="IMAGE/pay/pay.png" alt=""> 
+            <img src="IMAGE/pay/pay.png" alt="Accepted payment methods"> 
         </div>
         <div class="copyright">
-            <p>&copy; 2026, DammyGold etc - HTML CSS Ecommerce Template </p>
+            <p>&copy; 2026, DammyGold — Fashion E-Commerce</p>
         </div>
-        
     </footer>
+    
+    <script src="script.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        // Newsletter button wiring
+        document.addEventListener('DOMContentLoaded', () => {
+            const newsletterInput = document.getElementById('newsletter-email');
+            const newsletterBtn   = document.getElementById('newsletter-btn');
+            if (newsletterInput && newsletterBtn) {
+                newsletterBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    validateNewsletter(newsletterInput, newsletterBtn);
+                });
+            }
+        });
+    </script>
 </body>
-<script>
-    // toggle navbar
-const bar = document.getElementById('bar');
-const close = document.getElementById('close')
-const nav = document.getElementById('navbar');
-if (bar){
-    bar.addEventListener('click', () =>{
-        nav.classList.add('active')
-    }) 
-}
-if (close){
-    close.addEventListener('click', () =>{
-        nav.classList.remove('active')
-    })
-}
-</script>
 </html>
